@@ -4,7 +4,7 @@ public class phonebook implements Serializable{
 
 	private String name;	//�й�
 	private String phonenumber;	//�̸�
-	
+	 
 	//private static int studentCount=0; 			// number of Students
 	
 	public phonebook(String name, String phonenumber) {
