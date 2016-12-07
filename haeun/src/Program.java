@@ -15,6 +15,7 @@ public class Program extends JFrame implements ActionListener, ListSelectionList
 		setupPhonebookFrame();
 		setupScheduleFrame();
 		setupFrame();
+		
 	}
 
 	public void setupAccountFrame() {
