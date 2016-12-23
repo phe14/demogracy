@@ -37,6 +37,7 @@ public class Program extends JFrame implements ActionListener, ListSelectionList
 		phonebookPanel.setPreferredSize(new Dimension(540, 500));
 		phonebookPanel.setBorder(BorderFactory.createTitledBorder("phonebook"));
 
+		// 추가, 전체삭제 버튼 패널
 		phonebookButtonPanel = new JPanel();
 		phonebookButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 0));
 		phonebookButtonPanel.setPreferredSize(new Dimension(530, 50));
