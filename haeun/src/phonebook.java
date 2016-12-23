@@ -27,7 +27,6 @@ public class phonebook implements Serializable {
 	
 	public String toString() {
 		String description;
-		
 		description = name+"\t"+phonenumber;
 		
 		return description;

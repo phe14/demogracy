@@ -14,6 +14,7 @@ public class phonebookManager extends Program {
 	JTextField phonebookAddNameTxt, phonebookAddPhonenumberTxt;
 	DefaultListModel phonebookListModel;
 	JList phonebookList;
+	phonebook ObjectPhonebook;
 
 	BufferedWriter fileWriter = new BufferedWriter(new FileWriter("phonebook.txt", true));
 	BufferedReader fileReader = new BufferedReader(new FileReader("phonebook.txt"));
@@ -25,23 +26,62 @@ public class phonebookManager extends Program {
 	public static void main(String[] args) throws IOException {
 		new phonebookManager();
 	}
+	
+	public void actionPerformed(ActionEvent e) {
+		Object source = e.getSource();
 
-	public void Addphonebook() {
+		if (source == phonebookAddButton) {
+			AddphonebookFrame();
+		}
+
+		else if (source == phonebookRemoveButton) {
+			int n = phonebookList.getSelectedIndex();
+			try {
+				fileWriter = new BufferedWriter(new FileWriter("phonebook.txt"));
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			removeData();
+			phonebookListModel.removeElementAt(n);
+		}
+
+		else if (source == phonebookAddFrameButton) {
+			generateNewObject();
+			phonebookListModel.addElement(phonebookAddNameTxt.getText() + phonebookAddPhonenumberTxt.getText());
+			writeData();
+			phonebookAddFrame.dispose();
+		}
+
+		else if (source == phonebookAllRemoveButton) {
+			try {
+				fileWriter = new BufferedWriter(new FileWriter("phonebook.txt"));
+				removeAllData();
+				phonebookListModel.removeAllElements();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+	
+	public void generateNewObject() {
+		ObjectPhonebook = new phonebook(phonebookAddNameTxt.getText(),
+				phonebookAddPhonenumberTxt.getText());
+		collection.addElement(ObjectPhonebook);
+	}
+
+	public void AddphonebookFrame() {
 		phonebookAddFrame = new JFrame("전화번호부 추가 창");
 		phonebookAddFrame.setVisible(true);
 		phonebookAddFrame.setSize(300, 350);
 		phonebookAddFrame.setResizable(false);
 
-		// 전화번호부 추가 전체 패널
 		phonebookAddPanel = new JPanel();
 		phonebookAddPanel.setLayout(new BorderLayout());
 		phonebookAddPanel.setPreferredSize(new Dimension(300, 350));
 
-		// 전화번호부 추가 라벨,텍스트 패널
 		phonebookEditPanel = new JPanel();
 		phonebookEditPanel.setPreferredSize(new Dimension(300, 200));
 
-		// 전화번호부 추가 라벨 패널
 		phonebookAddLabelPanel = new JPanel();
 		phonebookAddName = new JLabel("이름");
 		phonebookAddPhonenumber = new JLabel("전화번호");
@@ -50,7 +90,6 @@ public class phonebookManager extends Program {
 		phonebookAddLabelPanel.setLayout(new GridLayout(0, 1));
 		phonebookEditPanel.add(phonebookAddLabelPanel);
 
-		// 전화번호부 추가 텍스트 패널
 		phonebookAddTextPanel = new JPanel();
 		phonebookAddNameTxt = new JTextField(15);
 		phonebookAddPhonenumberTxt = new JTextField(15);
@@ -59,16 +98,13 @@ public class phonebookManager extends Program {
 		phonebookAddTextPanel.setLayout(new GridLayout(0, 1));
 		phonebookEditPanel.add(phonebookAddTextPanel);
 
-		// 전화번호부 추가 버튼
 		phonebookAddButtonPanel = new JPanel();
 		phonebookAddFrameButton = new JButton("추가");
 		phonebookAddButtonPanel.add(phonebookAddFrameButton);
 		phonebookAddFrameButton.addActionListener(this);
 
-		// 프레임에 패널 추가
 		phonebookAddPanel.add(phonebookEditPanel, BorderLayout.NORTH);
 		phonebookAddPanel.add(phonebookAddButtonPanel);
-
 		phonebookAddFrame.add(phonebookAddPanel);
 	}
 
@@ -77,81 +113,59 @@ public class phonebookManager extends Program {
 		phonebookViewPanel.setPreferredSize(new Dimension(530, 550));
 		phonebookViewPanel.setBorder(BorderFactory.createTitledBorder("전화번호부"));
 		phonebookViewPanel.setLayout(new BorderLayout());
-
+		phonebookListModel = new DefaultListModel();
+		readDataAndAddToList();
+		phonebookList = new JList(phonebookListModel);
+		phonebookList.addListSelectionListener(this);
+		phonebookViewPanel.add(phonebookList);
+		phonebookPanel.add(phonebookViewPanel, BorderLayout.NORTH);
+	}
+	
+	public void readDataAndAddToList() {
 		try {
-			phonebookListModel = new DefaultListModel();
-
 			String s;
 			while ((s = fileReader.readLine()) != null) {
 				phonebookListModel.addElement(s);
 			}
-			phonebookList = new JList(phonebookListModel);
-			phonebookList.addListSelectionListener(this);
-			phonebookViewPanel.add(phonebookList);
 		}
-		
-		catch (FileNotFoundException e) {
+		catch (IOException e) {
 			e.printStackTrace();
 		}
-		phonebookPanel.add(phonebookViewPanel, BorderLayout.NORTH);
 	}
-
-	public void actionPerformed(ActionEvent e) {
-		Object source = e.getSource();
-
-		if (source == phonebookAddButton) {
-			Addphonebook();
+	
+	public void writeData() {
+		try {
+			fileWriter.write(phonebookAddNameTxt.getText());
+			fileWriter.write(phonebookAddPhonenumberTxt.getText());
+			fileWriter.newLine();
+			fileWriter.flush();
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
-
-		else if (source == phonebookRemoveButton) {
-			int n = phonebookList.getSelectedIndex();
-			
-			try {
-				
-				fileWriter = new BufferedWriter(new FileWriter("phonebook.txt"));
-				for (int i = 0; i < phonebookListModel.size(); i++) {
-					if (n != i) {
+	}
+	
+	public void removeData() {
+		int n = phonebookList.getSelectedIndex();
+		try {
+			for (int i = 0; i < phonebookListModel.size(); i++) {
+				if (n != i) {
 					fileWriter.write(phonebookListModel.elementAt(i).toString());
 					fileWriter.newLine();
-					} 
-					else
-						;
-				}
-				phonebookListModel.removeElementAt(n);
-				fileWriter.close();
-			} catch (IOException e1) {
-				e1.printStackTrace();
+				} else
+					;
 			}
-		}
-
-		else if (source == phonebookAddFrameButton) {
-			phonebook ObjectPhonebook = new phonebook(phonebookAddNameTxt.getText(),
-					phonebookAddPhonenumberTxt.getText());
-			collection.addElement(ObjectPhonebook); // s를 collection에 추가
-			phonebookListModel.addElement(phonebookAddNameTxt.getText() + phonebookAddPhonenumberTxt.getText());
-			
-			try {
-				fileWriter.write(phonebookAddNameTxt.getText());
-				fileWriter.write(phonebookAddPhonenumberTxt.getText());
-				fileWriter.newLine();
-				fileWriter.flush();
-				//fileWriter.close();
-			}
-			catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			phonebookAddFrame.dispose();
-		}
-
-		else if (source == phonebookAllRemoveButton) {
-			
-			try {
-				fileWriter = new BufferedWriter(new FileWriter("phonebook.txt"));
-				fileWriter.close();
-				phonebookListModel.removeAllElements();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 	}
+	
+	public void removeAllData() {
+		try {
+			fileWriter.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	
 }
