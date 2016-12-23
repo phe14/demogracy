@@ -1,18 +1,16 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+
 import javax.swing.*;
 
-class AccountInfo {
-	String username = "min";
-	String userpass = "123";
-}
-
+@SuppressWarnings("serial")
 public class Account extends JFrame implements ActionListener {
 	JPanel loginPanel, emptyPanel;
 	JLabel idlabel;
-    JLabel passlabel;
+    JLabel passwordlabel;
     TextField inputid;
-    TextField inputpass;
+    TextField inputpassword;
     JButton loginok;
     
 	public Account() {
@@ -29,16 +27,16 @@ public class Account extends JFrame implements ActionListener {
    		emptyPanel.setPreferredSize(new Dimension(1100,280));
 		
 		idlabel = new JLabel("ID:");
-		passlabel = new JLabel("PASSWORD:");
+		passwordlabel = new JLabel("PASSWORD:");
 		loginok = new JButton("login");
 		inputid = new TextField(10);
-		inputpass = new TextField(10);
-		inputpass.setEchoChar('*');
+		inputpassword = new TextField(10);
+		inputpassword.setEchoChar('*');
 		
 		loginPanel.add(idlabel); 
 		loginPanel.add(inputid); 
-		loginPanel.add(passlabel);
-		loginPanel.add(inputpass); 
+		loginPanel.add(passwordlabel);
+		loginPanel.add(inputpassword); 
 		loginPanel.add(loginok);
 		add(emptyPanel, BorderLayout.NORTH);
 		add(loginPanel, BorderLayout.CENTER);
@@ -48,10 +46,38 @@ public class Account extends JFrame implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {		
+        String id =  inputid.getText();
+        String password = inputpassword.getText();
+        
+        ReferenceAccount ReferenceAccount  = new ReferenceAccount();
 
+		if (id.equals(ReferenceAccount.username) && password.equals(ReferenceAccount.userpassword)){
+        	JOptionPane.showMessageDialog(null, "Success!");
+				try {
+					new Program();
+					setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+					dispose();
+					
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+        }
+		
+		else if(!id.equals(ReferenceAccount.username) && password.equals(ReferenceAccount.userpassword)){
+        	JOptionPane.showMessageDialog(null, "id doesn't match.");
+        }
+		
+        else if(!password.equals(ReferenceAccount.userpassword) && id.equals(ReferenceAccount.userpassword)){
+        	JOptionPane.showMessageDialog(null, "Password doesn't match.");
+        }
+		
+        else if(!id.equals(ReferenceAccount.username) && !password.equals(ReferenceAccount.userpassword)){
+        	JOptionPane.showMessageDialog(null, "try again.");
+        }
 	}
 	
 	public static void main(String[] args) {
 		new Account();
-	}	
+	}
 }

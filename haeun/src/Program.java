@@ -10,7 +10,8 @@ public class Program extends JFrame implements ActionListener, ListSelectionList
 	JPanel accountPanel, phonebookPanel, phonebookButtonPanel, phonebookViewPanel,
 			schedulePanel, scheduleButtonPanel, scheduleViewPanel;
 	JButton phonebookAddButton, phonebookAllRemoveButton, phonebookRemoveButton,
-			scheduleAddButton, scheduleAllRemoveButton, scheduleRemoveButton;
+			scheduleAddButton, scheduleAllRemoveButton, scheduleRemoveButton,
+			accountModifyButton , logoutButton;
 
 	public Program() throws IOException {
 		setupAccountFrame();
@@ -22,6 +23,13 @@ public class Program extends JFrame implements ActionListener, ListSelectionList
 	public void setupAccountFrame() {
 		accountPanel = new JPanel();
 		accountPanel.setPreferredSize(new Dimension(1100, 100));
+		logoutButton = new JButton("LOGOUT");
+		accountModifyButton = new JButton ("ACCOUNT MODIFY");
+		accountPanel.add(accountModifyButton);
+		accountPanel.add(logoutButton);
+		
+		accountModifyButton.addActionListener(this);
+		logoutButton.addActionListener(this);
 	}
 
 	public void setupPhonebookFrame() {
@@ -29,6 +37,7 @@ public class Program extends JFrame implements ActionListener, ListSelectionList
 		phonebookPanel.setPreferredSize(new Dimension(540, 500));
 		phonebookPanel.setBorder(BorderFactory.createTitledBorder("phonebook"));
 
+		// 추가, 전체삭제 버튼 패널
 		phonebookButtonPanel = new JPanel();
 		phonebookButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 0));
 		phonebookButtonPanel.setPreferredSize(new Dimension(530, 50));
@@ -44,6 +53,7 @@ public class Program extends JFrame implements ActionListener, ListSelectionList
 		phonebookAddButton.addActionListener(this);
 		phonebookRemoveButton.addActionListener(this);
 		phonebookAllRemoveButton.addActionListener(this);
+
 	}
 
 	public void setupScheduleFrame() {
@@ -51,6 +61,7 @@ public class Program extends JFrame implements ActionListener, ListSelectionList
 		schedulePanel.setPreferredSize(new Dimension(540, 500));
 		schedulePanel.setBorder(BorderFactory.createTitledBorder("schedule"));
 
+		// 추가, 전체삭제 버튼 패널
 		scheduleButtonPanel = new JPanel();
 		scheduleButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 0));
 		scheduleButtonPanel.setPreferredSize(new Dimension(530, 50));
@@ -81,16 +92,32 @@ public class Program extends JFrame implements ActionListener, ListSelectionList
 	}
 
 	public static void main(String[] args) throws IOException {
-		new Program();
 	}
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		Object source = e.getSource();
+		
+		if (source == accountModifyButton) {
+			try {
+				new AccountManager();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+		else if (source == logoutButton) {
+			new Account();
+			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+			dispose();
+		}
 	}
+
 }
