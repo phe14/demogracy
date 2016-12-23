@@ -20,7 +20,7 @@ public class ScheduleManager extends Program {
 
 	public ScheduleManager() throws IOException {
 		printScheduleList();
-	}
+	} 
 	
 	public static void main(String[] args) throws IOException {
 		new ScheduleManager();
@@ -118,7 +118,6 @@ public class ScheduleManager extends Program {
 			collection.addElement(Objectschedule); // s를 collection에 추가
 			scheduleListModel.addElement(scheduleAddDateTxt.getText() + scheduleAddscheduleDescriptionTxt.getText());
 
-			///// 메모장에 저장///////
 			try {
 				fileWriter2.write(scheduleAddDateTxt.getText());
 				fileWriter2.write(scheduleAddscheduleDescriptionTxt.getText());

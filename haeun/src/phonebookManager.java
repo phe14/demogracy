@@ -144,6 +144,7 @@ public class phonebookManager extends Program {
 
 	public void removeData() {
 		int n = phonebookList.getSelectedIndex();
+		
 		try {
 			for (int i = 0; i < phonebookListModel.size(); i++) {
 				if (n != i) {

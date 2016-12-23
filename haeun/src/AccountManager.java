@@ -139,7 +139,6 @@ public class AccountManager extends JFrame implements ActionListener{
 				passfileWriter.flush();
 				passfileWriter.close();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}				
 			JOptionPane.showMessageDialog(null, "password has changed.");

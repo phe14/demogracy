@@ -10,13 +10,12 @@ public class Schedule implements Serializable {
 		
 		this.scheduleDate = scheduleDate;
 		this.scheduleDescription = scheduleDescription;
-
 	}
 	
 	
 	public String getName() {
 		return scheduleDate;
-	}
+	} 
 
 
 	public void setName(String scheduleDate) {
