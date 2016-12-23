@@ -3,15 +3,17 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.Vector;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-public class ScheduleManager extends Program {
-	
+public class ScheduleManager extends JFrame implements ActionListener, ListSelectionListener {
 	Vector<Schedule> collection = new Vector<Schedule>();
 	JFrame scheduleAddFrame;
-	JPanel scheduleAddPanel, scheduleAddLabelPanel, scheduleAddTextPanel, scheduleEditPanel, scheduleAddButtonPanel;
-	JButton scheduleAddFrameButton;
-	JLabel scheduleViewLabel, scheduleAddDate, scheduleAddscheduleDescription;
-	JTextField scheduleAddDateTxt, scheduleAddscheduleDescriptionTxt;
+	JPanel scheduleButtonPanel, scheduleViewPanel, scheduleAddPanel, scheduleAddLabelPanel, scheduleAddTextPanel,
+			scheduleEditPanel, scheduleAddButtonPanel;
+	JButton scheduleAddButton, scheduleRemoveButton, scheduleAllRemoveButton, scheduleAddFrameButton;
+	JLabel scheduleViewLabel, scheduleAddDate, scheduleAddDescription;
+	JTextField scheduleAddDateTxt, scheduleAddDescriptionTxt;
 	DefaultListModel scheduleListModel;
 	JList scheduleList;
 
@@ -20,122 +22,162 @@ public class ScheduleManager extends Program {
 
 	public ScheduleManager() throws IOException {
 		printScheduleList();
-	} 
-	
+		setupFrame();
+	}
+
 	public static void main(String[] args) throws IOException {
 		new ScheduleManager();
 	}
-	
-	public void Addschedule() {
-		ScheduleAddFrame = new JFrame("스케줄 추가 창");
-		ScheduleAddFrame.setVisible(true);
-		ScheduleAddFrame.setSize(300, 350);
-		ScheduleAddFrame.setResizable(false);
 
-		// 스케줄 추가 전체 패널
+	public void setupFrame() {
+		setTitle("스케줄 창");
+		setSize(600, 800);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setVisible(true);
+		setResizable(false);
+		add(scheduleButtonPanel, BorderLayout.NORTH);
+		add(scheduleViewPanel);
+	}
+
+	public void AddscheduleFrame() {
+		scheduleAddFrame = new JFrame("스케줄 추가 창");
+		scheduleAddFrame.setVisible(true);
+		scheduleAddFrame.setSize(300, 350);
+		scheduleAddFrame.setResizable(false);
+
 		scheduleAddPanel = new JPanel();
 		scheduleAddPanel.setLayout(new BorderLayout());
 		scheduleAddPanel.setPreferredSize(new Dimension(300, 350));
 
-		// 스케줄 추가 라벨,텍스트 패널
 		scheduleEditPanel = new JPanel();
 		scheduleEditPanel.setPreferredSize(new Dimension(300, 200));
 
-		// 스케줄 추가 라벨 패널
 		scheduleAddLabelPanel = new JPanel();
-		scheduleAddDate = new JLabel("날짜");
-		scheduleAddscheduleDescription = new JLabel("내용");
+		scheduleAddDate = new JLabel("날짜 (yyyy-mm-dd)");
+		scheduleAddDescription = new JLabel("세부 스케줄 입력");
 		scheduleAddLabelPanel.add(scheduleAddDate);
-		scheduleAddLabelPanel.add(scheduleAddscheduleDescription);
+		scheduleAddLabelPanel.add(scheduleAddDescription);
 		scheduleAddLabelPanel.setLayout(new GridLayout(0, 1));
 		scheduleEditPanel.add(scheduleAddLabelPanel);
 
-		// 스케줄 추가 텍스트 패널
 		scheduleAddTextPanel = new JPanel();
 		scheduleAddDateTxt = new JTextField(15);
-		scheduleAddscheduleDescriptionTxt = new JTextField(15);
+		scheduleAddDescriptionTxt = new JTextField(15);
 		scheduleAddTextPanel.add(scheduleAddDateTxt);
-		scheduleAddTextPanel.add(scheduleAddscheduleDescriptionTxt);
+		scheduleAddTextPanel.add(scheduleAddDescriptionTxt);
 		scheduleAddTextPanel.setLayout(new GridLayout(0, 1));
 		scheduleEditPanel.add(scheduleAddTextPanel);
 
-		// 스케줄 추가 버튼
 		scheduleAddButtonPanel = new JPanel();
 		scheduleAddFrameButton = new JButton("추가");
 		scheduleAddButtonPanel.add(scheduleAddFrameButton);
 		scheduleAddFrameButton.addActionListener(this);
 
-		// 프레임에 패널 추가
 		scheduleAddPanel.add(scheduleEditPanel, BorderLayout.NORTH);
 		scheduleAddPanel.add(scheduleAddButtonPanel);
 		scheduleAddFrame.add(scheduleAddPanel);
 	}
 
 	public void printScheduleList() throws IOException {
-		// 스케줄 목록 출력
+		scheduleButtonPanel = new JPanel();
+		scheduleButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+		scheduleButtonPanel.setPreferredSize(new Dimension(530, 50));
+
+		scheduleAddButton = new JButton("추가");
+		scheduleRemoveButton = new JButton("삭제");
+		scheduleAllRemoveButton = new JButton("전체삭제");
+		scheduleButtonPanel.add(scheduleAddButton);
+		scheduleButtonPanel.add(scheduleRemoveButton);
+		scheduleButtonPanel.add(scheduleAllRemoveButton);
+
+		scheduleAddButton.addActionListener(this);
+		scheduleRemoveButton.addActionListener(this);
+		scheduleAllRemoveButton.addActionListener(this);
+
 		scheduleViewPanel = new JPanel();
 		scheduleViewPanel.setPreferredSize(new Dimension(530, 550));
 		scheduleViewPanel.setBorder(BorderFactory.createTitledBorder("스케줄"));
 		scheduleViewPanel.setLayout(new BorderLayout());
+		scheduleListModel = new DefaultListModel();
+		readData();
+		scheduleList = new JList(scheduleListModel);
+		scheduleList.addListSelectionListener(this);
+		scheduleViewPanel.add(scheduleList);
+	}
 
-		////// 메모장에서 읽기////////////
+	public void readData() {
 		try {
-			scheduleListModel = new DefaultListModel();
-
 			String s;
 			while ((s = fileReader2.readLine()) != null) {
 				scheduleListModel.addElement(s);
 			}
-			scheduleList = new JList(scheduleListModel);
-			scheduleList.addListSelectionListener(this);
-			scheduleViewPanel.add(scheduleList);
-		}
-
-		catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		schedulePanel.add(scheduleViewPanel, BorderLayout.NORTH);
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		Object source = e.getSource();
+	public String writeData(String a, String b, String c, String d) {
+		String s = null;
+		try {
+			fileWriter2.write("[");
+			fileWriter2.write(b);
+			fileWriter2.write("]  ");
+			fileWriter2.write(d);
+			fileWriter2.newLine();
+			fileWriter2.flush();
+			s = fileReader2.readLine();
+		} catch (IOException exception) {
+			exception.printStackTrace();
+		}
+		return s;
+	}
 
-		// 스케줄 상단에 추가버튼을 누른다면 새 창이 뜬다.
+	public void actionPerformed(ActionEvent event) {
+		Object source = event.getSource();
+
 		if (source == scheduleAddButton) {
-			Addschedule();
+			AddscheduleFrame();
 		}
 
 		else if (source == scheduleRemoveButton) {
-			int n = scheduleList.getSelectedIndex();
-			scheduleListModel.removeElementAt(n); // 리스트에서 index n을 삭제
+			int indexElement = scheduleList.getSelectedIndex();
 
-			/////// 메모장 업데이트/////
-
+			try {
+				fileWriter2 = new BufferedWriter(new FileWriter("scheduleFile.txt"));
+				for (int i = 0; i < scheduleListModel.size(); i++) {
+					if (indexElement != i) {
+						fileWriter2.write(scheduleListModel.elementAt(i).toString());
+						fileWriter2.newLine();
+					} else
+						;
+				}
+				scheduleListModel.removeElementAt(indexElement);
+				fileWriter2.close();
+			} catch (IOException exception) {
+				exception.printStackTrace();
+			}
 		}
 
 		else if (source == scheduleAddFrameButton) {
-			Schedule Objectschedule = new Schedule(scheduleAddDateTxt.getText(),scheduleAddscheduleDescriptionTxt.getText());
-			collection.addElement(Objectschedule); // s를 collection에 추가
-			scheduleListModel.addElement(scheduleAddDateTxt.getText() + scheduleAddscheduleDescriptionTxt.getText());
-
-			try {
-				fileWriter2.write(scheduleAddDateTxt.getText());
-				fileWriter2.write(scheduleAddscheduleDescriptionTxt.getText());
-				fileWriter2.newLine();
-				fileWriter2.flush();
-				fileWriter2.close();
-
-			} 
-			
-			catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			Schedule ObjectSchedule = new Schedule(scheduleAddDateTxt.getText(), scheduleAddDescriptionTxt.getText());
+			collection.addElement(ObjectSchedule);
+			scheduleListModel.addElement("(new) [" + scheduleAddDateTxt.getText() + "]  " + scheduleAddDescriptionTxt.getText());
+			writeData("[", scheduleAddDateTxt.getText(), "]  ", scheduleAddDescriptionTxt.getText());
 			scheduleAddFrame.dispose();
 		}
 
 		else if (source == scheduleAllRemoveButton) {
-			scheduleListModel.removeAllElements();
+			try {
+				fileWriter2 = new BufferedWriter(new FileWriter("scheduleFile.txt"));
+				scheduleListModel.removeAllElements();
+			} catch (IOException exception) {
+				exception.printStackTrace();
+			}
 		}
+	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+
 	}
 }

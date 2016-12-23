@@ -1,13 +1,12 @@
 import java.io.*;
 
 public class ReferenceAccount {
-	
 	String username;
 	String userpassword;
-	File idfile = new File("c:\\account.txt");
-	File passwordfile = new File("c:\\passaccount.txt");
+	File idfile = new File("account.txt");
+	File passwordfile = new File("passaccount.txt");
 	
-	public ReferenceAccount(){
+	public ReferenceAccount() {
 		BufferedReader idReader = null;
 		try {
 			idReader = new BufferedReader(new FileReader(idfile));
@@ -16,10 +15,9 @@ public class ReferenceAccount {
 			while ((s = idReader.readLine()) != null){
 				username = s;
 			}
-			
-		}catch (IOException e1) {
+		} catch (IOException e1) {
 	         e1.printStackTrace();
-		} 
+		}
 		
 		BufferedReader passReader = null;
 		try {
@@ -29,7 +27,7 @@ public class ReferenceAccount {
 			while ((i = passReader.readLine()) != null){
 				userpassword = i;
 			}
-		}catch (IOException e2) {
+		} catch (IOException e2) {
 	         e2.printStackTrace();
 		}
 	}

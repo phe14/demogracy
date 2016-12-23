@@ -5,7 +5,9 @@ import java.awt.GridLayout;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.JButton;
@@ -100,18 +102,19 @@ public class AccountManager extends JFrame implements ActionListener{
 		}
 	}
 	
-	public void idchange(String newid1, String oldid1){
+	public int idchange(String newid1, String oldid1){
         String newid = newid1;
         String oldid = oldid1;
         
 		if (newid.equals(oldid)) {
 			JOptionPane.showMessageDialog(null, "the previous ID and a new ID are same.");
+			return 3;
 		}
 			
 		else{
 			BufferedWriter fileWriter;
 			try {
-				fileWriter = new BufferedWriter(new FileWriter("idfile"));
+				fileWriter = new BufferedWriter(new FileWriter("account.txt"));
 				fileWriter.write(newid);
 				fileWriter.flush();
 				fileWriter.close();
@@ -120,28 +123,37 @@ public class AccountManager extends JFrame implements ActionListener{
 				e1.printStackTrace();
 			}				
 			JOptionPane.showMessageDialog(null, "ID has changed.");
+			return 4;
 		}
 	}
 	
-	public void passwordchange(String newpassword1, String confirmpassword1) {
+	public String passwordchange(String newpassword1, String confirmpassword1) {
         String newpassword = newpassword1;
         String confirmpassword = confirmpassword1;
         
 		if(!newpassword.equals(confirmpassword)) {
 			JOptionPane.showMessageDialog(null, "The two entered password is different.");
+			return "success";
 		}
 		
 		else {
 			BufferedWriter passfileWriter;
+			BufferedReader passfileReader;
+	        String s = null;
+	        
 			try {
-				passfileWriter = new BufferedWriter(new FileWriter("passwordfile"));
+				passfileWriter = new BufferedWriter(new FileWriter("passaccount.txt"));
 				passfileWriter.write(newpassword);
+				passfileReader = new BufferedReader(new FileReader("passaccount.txt"));
+				
 				passfileWriter.flush();
-				passfileWriter.close();
+				s = passfileReader.readLine();
+				//passfileWriter.close();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}				
 			JOptionPane.showMessageDialog(null, "password has changed.");
+			return s;
 		}
 	}
 }
