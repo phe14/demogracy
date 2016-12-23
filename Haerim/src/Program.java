@@ -10,7 +10,8 @@ public class Program extends JFrame implements ActionListener, ListSelectionList
 	JPanel accountPanel, phonebookPanel, phonebookButtonPanel, phonebookViewPanel,
 			schedulePanel, scheduleButtonPanel, scheduleViewPanel;
 	JButton phonebookAddButton, phonebookAllRemoveButton, phonebookRemoveButton,
-			scheduleAddButton, scheduleAllRemoveButton, scheduleRemoveButton;
+			scheduleAddButton, scheduleAllRemoveButton, scheduleRemoveButton,
+			accountModifyButton , logoutButton;
 
 	public Program() throws IOException {
 		setupAccountFrame();
@@ -22,6 +23,13 @@ public class Program extends JFrame implements ActionListener, ListSelectionList
 	public void setupAccountFrame() {
 		accountPanel = new JPanel();
 		accountPanel.setPreferredSize(new Dimension(1100, 100));
+		logoutButton = new JButton("LOGOUT");
+		accountModifyButton = new JButton ("ACCOUNT MODIFY");
+		accountPanel.add(accountModifyButton);
+		accountPanel.add(logoutButton);
+		
+		accountModifyButton.addActionListener(this);
+		logoutButton.addActionListener(this);
 	}
 
 	public void setupPhonebookFrame() {
@@ -84,7 +92,6 @@ public class Program extends JFrame implements ActionListener, ListSelectionList
 	}
 
 	public static void main(String[] args) throws IOException {
-		new Program();
 	}
 
 	@Override
@@ -95,8 +102,22 @@ public class Program extends JFrame implements ActionListener, ListSelectionList
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		Object source = e.getSource();
 		
+		if (source == accountModifyButton) {
+			try {
+				new AccountManager();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+		else if (source == logoutButton) {
+			new Account();
+			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+			dispose();
+		}
 	}
 
 }
