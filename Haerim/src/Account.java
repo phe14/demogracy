@@ -1,11 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-<<<<<<< HEAD
-=======
-
-import javax.swing.*;
->>>>>>> refs/remotes/origin/master
 
 import javax.swing.*;
 
@@ -52,7 +47,6 @@ public class Account extends JFrame implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {		
         String id =  inputid.getText();
-<<<<<<< HEAD
         String password = inputpassword.getText();
         
         ReferenceAccount ReferenceAccount  = new ReferenceAccount();
@@ -79,29 +73,6 @@ public class Account extends JFrame implements ActionListener {
         }
 		
         else if(!id.equals(ReferenceAccount.username) && !password.equals(ReferenceAccount.userpassword)){
-=======
-        String pass = inputpass.getText();
-        
-        AccountInfo account  = new AccountInfo();
-
-		if (id.equals(account.username) && pass.equals(account.userpass)){
-        	JOptionPane.showMessageDialog(null, "Success!");
-        	try {
-				new Program();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-        }
-		else if(!id.equals(account.username)&&account.userpass.equals(pass)){
-        	JOptionPane.showMessageDialog(null, "id doesn't match.");
-        }
-        else if(!pass.equals(account.userpass)&&account.username.equals(id)){
-        	JOptionPane.showMessageDialog(null, "Password doesn't match.");
-        }
-		
-        else if(!id.equals(account.username)&&!pass.equals(account.userpass)){
->>>>>>> refs/remotes/origin/master
         	JOptionPane.showMessageDialog(null, "try again.");
         }
 	}

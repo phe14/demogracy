@@ -37,14 +37,14 @@ public class Program extends JFrame implements ActionListener, ListSelectionList
 		phonebookPanel.setPreferredSize(new Dimension(540, 500));
 		phonebookPanel.setBorder(BorderFactory.createTitledBorder("phonebook"));
 
-		// 異붽�, �쟾泥댁궘�젣 踰꾪듉 �뙣�꼸
+		// 추가, 전체삭제 버튼 패널
 		phonebookButtonPanel = new JPanel();
 		phonebookButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 0));
 		phonebookButtonPanel.setPreferredSize(new Dimension(530, 50));
 
-		phonebookAddButton = new JButton("異붽�");
-		phonebookRemoveButton = new JButton("�궘�젣");
-		phonebookAllRemoveButton = new JButton("�쟾泥댁궘�젣");
+		phonebookAddButton = new JButton("추가");
+		phonebookRemoveButton = new JButton("삭제");
+		phonebookAllRemoveButton = new JButton("전체삭제");
 		phonebookButtonPanel.add(phonebookAddButton);
 		phonebookButtonPanel.add(phonebookRemoveButton);
 		phonebookButtonPanel.add(phonebookAllRemoveButton);
